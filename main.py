@@ -3,17 +3,21 @@ import re
 import graph_tool.all as gt
 
 
-url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
+base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
 
-page = urlopen(url)
-html = page.read().decode("utf-8")  # Read and decode the HTML content
+def extract_html(url : str) -> str:
+    return urlopen(url).read().decode("utf-8")
 
-direct_links = re.findall('https*:.+?(?=[?"])', html)  # Find all URLs in the HTML content
+def extract_direct_links(html: str) -> list:
+    return re.findall('href="([^"]+?)(?=[?"])', html)
 
-same_page_links = re.findall('href="/([^"]+?)(?=[?"])', html)  # Find all relative links
+def extract_same_page_links(html: str) -> list:
+    return re.findall('href="/([^"]+?)(?=[?"])', html)
 
-for i in range(len(same_page_links)):
-    same_page_links[i] = url + "/" + same_page_links[i]  # Convert relative links to absolute links
+html = extract_html(base_url)  # Fetch the HTML content 
+direct_links = extract_direct_links(html)  # Extract direct links 
+same_page_links = extract_same_page_links(html)  # Extract same page links 
+
 
 g = gt.Graph(directed=True)  # Create a directed graph 
 
