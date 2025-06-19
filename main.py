@@ -66,4 +66,4 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0) -> None:
 # Start the recursive link extraction from the base url
 add_links_to_graph(base_url, depth)
 
-gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
+gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
