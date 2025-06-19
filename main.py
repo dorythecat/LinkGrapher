@@ -33,7 +33,7 @@ origin = g.add_vertex()  # Add an origin vertex
 vcolor[origin] = "#ff0000"  # Color the origin vertex red
 
 # TODO(Dory): Make recursive function to extract links from each page
-def add_links_to_graph(url: str, depth: int, current_depth: int = 0) -> None:
+def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
     if current_depth >= depth:
         return
     
@@ -45,8 +45,8 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0) -> None:
             link = base_url + link  # Construct full URL if it's a relative link
         
         vertex = g.add_vertex()  # Add a new vertex for the link
-        e = g.add_edge(origin, vertex)  # Create an edge from origin to the new vertex
-        eweight[e] = 1.0
+        e = g.add_edge(origin_vert, vertex)  # Create an edge from origin to the new vertex
+        eweight[e] = 10.0 / len(links)  # Set the edge weight based on the number of links
     
         # The vertex color can be set based on the depth or other criteria
         if current_depth == 0:
@@ -61,7 +61,7 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0) -> None:
             vcolor[vertex] = "#00ffff"
         else:
             vcolor[vertex] = "#ffffff"
-        add_links_to_graph(link, depth, current_depth + 1)  # Recur for the next depth
+        add_links_to_graph(link, depth, current_depth + 1, vertex)  # Recur for the next depth
 
 # Start the recursive link extraction from the base url
 add_links_to_graph(base_url, depth)
