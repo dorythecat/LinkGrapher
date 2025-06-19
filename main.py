@@ -41,7 +41,9 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
     links = extract_direct_links(html) + extract_same_page_links(html)  # Extract all links
 
     for link in links:
-        if not link.startswith("http"):
+        if not link.startswith("http"): # Check if the link is relative
+            if not link.startswith("/"):
+                link = "/" + link  # Ensure the link starts with a slash
             link = base_url + link  # Construct full URL if it's a relative link
         
         vertex = g.add_vertex()  # Add a new vertex for the link
