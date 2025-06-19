@@ -27,6 +27,7 @@ vcolor = g.new_vp("string")
 origin = g.add_vertex()  # Add an origin vertex
 vcolor[origin] = "#ff0000"  # Color the origin vertex red
 
+# TODO(Dory): Make recursive function to extract links from each page
 for link in direct_links:
     v = g.add_vertex()  # Add each link as a vertex in the graph 
     vcolor[v] = "#0000ff"  # Color the vertex blue
