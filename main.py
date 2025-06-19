@@ -66,6 +66,9 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
         add_links_to_graph(link, depth, current_depth + 1, vertex)  # Recur for the next depth
 
 # Start the recursive link extraction from the base url
-add_links_to_graph(base_url, depth)
-
-gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
+# The block will make sure that if we hit Ctrl+C, the graph will still be drawn
+# Unless we hit it twice, in which case it will exit immediately
+try:
+    add_links_to_graph(base_url, depth)
+finally:
+    gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
