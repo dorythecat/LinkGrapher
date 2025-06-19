@@ -1,5 +1,7 @@
 from urllib.request import urlopen
 import re
+import graph_tool.all as gt
+
 
 url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
 
@@ -17,3 +19,13 @@ print("Direct Links:")
 print(direct_links)
 print("\nSame Page Links:")
 print(same_page_links)
+
+g = gt.Graph(directed=True)  # Create a directed graph 
+
+origin = g.add_vertex()  # Add an origin vertex
+
+for link in direct_links + same_page_links:
+    v = g.add_vertex()  # Add each link as a vertex in the graph 
+    g.add_edge(origin, v)
+
+gt.graph_draw(g, vertex_text=g.vertex_index, output="output.svg")
