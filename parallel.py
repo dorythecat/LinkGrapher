@@ -60,11 +60,15 @@ def prune_links(url: str, links: list) -> list:
     pruned_links = []
     domain = url.split("/")[0] + "//" + url.split("/")[2]
     for link in links:
-        link = link.strip()
+        if not link or link.startswith("#"):
+            continue
         if not link.startswith("http"):
-            if not link.startswith("/"):
-                link = "/" + link
-            link = domain + link
+            if link.startswith("//"):
+                link = "http:" + link
+            else:
+                if not link.startswith("/"):
+                    link = "/" + link
+                link = domain + link
         if link in seen:
             continue
         seen.add(link)
