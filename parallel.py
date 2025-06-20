@@ -1,11 +1,13 @@
 from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
 import re
 import graph_tool.all as gt
 from concurrent.futures import ThreadPoolExecutor
 import time
+import sys
 
-base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
-depth = 2  # Depth of recursion for link extraction
+base_url = "https://github.com/dorythecat" # URL to scrape
+depth = 3  # Depth of recursion for link extraction
 debug_mode = True  # Set to True to enable debug mode
 
 forbidden_content = [ # List of content to skip
