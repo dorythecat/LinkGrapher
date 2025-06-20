@@ -29,6 +29,13 @@ def extract_links(html: str) -> list:
     """Extract links from HTML content."""
     return re.findall('href="/([^"]+?)(?=[?"])', html)
 
+def extract_links_from_url(url: str) -> list:
+    """Extract links from a given URL."""
+    html = extract_html(url)
+    if not html:
+        return []
+    return extract_links(html)
+
 def is_forbidden(link: str) -> bool:
     """Check if a link is forbidden based on the content."""
     for content in forbidden_content:
@@ -50,10 +57,13 @@ def prune_links(url: str, links: list) -> list:
         if link in seen:
             continue
         seen.add(link)
-        if is_forbidden(link):
-            continue
-        pruned_links.append(link)
+        if not is_forbidden(link):
+            pruned_links.append(link)
     return pruned_links
+
+def prune_url_links(url: str) -> list:
+    """Prune links from a URL."""
+    return prune_links(url, extract_links_from_url(url))
 
 g = gt.Graph(directed=True)
 
@@ -71,15 +81,11 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
     if current_depth >= depth:
         return
     
-    links = prune_links(vlink[origin_vert], extract_links(extract_html(vlink[origin_vert])))
-
+    links = prune_url_links(vlink[origin_vert])
     for link in links:
         if link in seen:
             vertex = g.vertex(vlink.a == link)
-            if vertex is None:
-                continue
-            # Check there's no existing edge to this vertex 
-            if g.edge(origin_vert, vertex) is not None:
+            if vertex is None or g.edge(origin_vert, vertex) is not None:
                 continue
             e = g.add_edge(origin_vert, vertex)
             eweight[e] = 10.0 / len(links)
@@ -103,10 +109,11 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
             vcolor[vertex] = "#ffffff"
         vlink[vertex] = link
         next_stage_vertices.append(vertex)
-    if next_stage_vertices:
-        with ThreadPoolExecutor() as executor:
-            # Submit the next stage of link extraction for each vertex in parallel
-            futures = [executor.submit(add_links_to_graph, current_depth + 1, v) for v in next_stage_vertices]
+    if not next_stage_vertices:
+        return
+    with ThreadPoolExecutor() as executor:
+        # Submit the next stage of link extraction for each vertex in parallel
+        futures = [executor.submit(add_links_to_graph, current_depth + 1, v) for v in next_stage_vertices]
 # Start the recursive link extraction from the base url
 # The block will make sure that if we hit Ctrl+C, the graph will still be drawn
 # Unless we hit it twice, in which case it will exit immediately
