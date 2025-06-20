@@ -69,6 +69,7 @@ vcolor[origin] = "#ff0000"
 vlink[origin] = base_url
 
 next_stage_vertices = []
+seen = set(base_url)
 def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
     if current_depth >= depth:
         return
@@ -76,6 +77,17 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
     links = prune_links(vlink[origin_vert], extract_links(extract_html(vlink[origin_vert])))
 
     for link in links:
+        if link in seen:
+            vertex = g.vertex(vlink.a == link)
+            if vertex is None:
+                continue
+            # Check there's no existing edge to this vertex 
+            if g.edge(origin_vert, vertex) is not None:
+                continue
+            e = g.add_edge(origin_vert, vertex)
+            eweight[e] = 10.0 / len(links)
+            continue;
+        seen.add(link)
         vertex = g.add_vertex()
         e = g.add_edge(origin_vert, vertex)
         eweight[e] = 10.0 / len(links)
