@@ -22,11 +22,10 @@ def extract_direct_links(html: str) -> list:
 def extract_same_page_links(html: str) -> list:
     return re.findall('href="/([^"]+?)(?=[?"])', html)
 
-def prune_links(url: str, links: list) -> (list, int):
+def prune_links(url: str, links: list) -> list:
     """Prune links to remove duplicates and ensure they are absolute."""
     seen = set()
     pruned_links = []
-    back_links = 0
     domain = url.split("/")[0] + "//" + url.split("/")[2]
     for link in links:
         link = link.strip()
@@ -58,7 +57,7 @@ def prune_links(url: str, links: list) -> (list, int):
         if ".ico" in link or ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link or ".bmp" in link or ".svg" in link or ".webp" in link:
             continue # Skip image files
         pruned_links.append(link)
-    return pruned_links, back_links
+    return pruned_links
 
 html = extract_html(base_url)  # Fetch the HTML content 
 direct_links = extract_direct_links(html)  # Extract direct links 
@@ -82,10 +81,7 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
     html = extract_html(url)  # Fetch the HTML content of the page
     links = extract_direct_links(html) + extract_same_page_links(html)
 
-    links, back_links = prune_links(url, links)
-
-    # Idk what to use the back_links for, since it's ugly to represent
-    # in the graph, but we can print it for debugging if we really want to
+    links = prune_links(url, links)
 
     for link in links:
         vertex = g.add_vertex()  # Add a new vertex for the link
