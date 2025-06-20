@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 
 base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
-depth = 3  # Depth of recursion for link extraction
+depth = 2  # Depth of recursion for link extraction
 debug_mode = True  # Set to True to enable debug mode
 
 def extract_html(url : str) -> str:
@@ -27,18 +27,18 @@ def prune_links(url: str, links: list) -> (list, int):
     seen = set()
     pruned_links = []
     back_links = 0
+    domain = url.split("/")[0] + "//" + url.split("/")[2]
     for link in links:
         link = link.strip()
         if not link.startswith("http"):
             if not link.startswith("/"):
                 link = "/" + link
-            link = url + link
+            link = domain + link
         if link in seen:
             continue
         seen.add(link)
-        if url in link and link.startswith(url + "/"):
-            back_links += 1
-            continue
+        if ".css" in link or ".js" in link or ".php" in link or ".json" in link or ".xml" in link:
+            continue # Skip static files
         if "mailto:" in link:
             continue # Skip mailto links
         if "googleapis.com" in link or "gstatic.com" in link or "googleusercontent.com" in link or "google.com" in link:
@@ -55,7 +55,7 @@ def prune_links(url: str, links: list) -> (list, int):
             continue # Skip YouTube links
         if ".zip" in link or ".tar" in link or ".gz" in link:
             continue # Skip archive files
-        if ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link:
+        if ".ico" in link or ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link or ".bmp" in link or ".svg" in link or ".webp" in link:
             continue # Skip image files
         pruned_links.append(link)
     return pruned_links, back_links
@@ -80,10 +80,9 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
         return
     
     html = extract_html(url)  # Fetch the HTML content of the page
-    links = extract_direct_links(html)
+    links = extract_direct_links(html) + extract_same_page_links(html)
 
     links, back_links = prune_links(url, links)
-    back_links += len(extract_same_page_links(html))
 
     # Idk what to use the back_links for, since it's ugly to represent
     # in the graph, but we can print it for debugging if we really want to
