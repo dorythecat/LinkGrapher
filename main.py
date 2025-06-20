@@ -5,12 +5,14 @@ import graph_tool.all as gt
 
 base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
 depth = 2  # Depth of recursion for link extraction
+debug_mode = False  # Set to True to enable debug mode
 
 def extract_html(url : str) -> str:
     try:
         return urlopen(url).read().decode("utf-8")
     except Exception as e:
-        print(f"Error fetching {url}: {e}")
+        if debug_mode:
+            print(f"Error fetching {url}: {e}")
         return ""
 
 def extract_direct_links(html: str) -> list:
