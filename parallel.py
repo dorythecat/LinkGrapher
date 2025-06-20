@@ -38,7 +38,7 @@ def extract_html(url : str) -> str:
 
 def extract_links(html: str) -> list:
     """Extract links from HTML content."""
-    return re.findall('href="/([^"]+?)(?=[?"])', html)
+    return re.findall('href="([^"]+?)(?=[?:"])', html)
 
 def extract_links_from_url(url: str) -> list:
     """Extract links from a given URL."""
