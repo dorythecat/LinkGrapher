@@ -66,13 +66,14 @@ vlink = g.new_vp("string")
 
 origin = g.add_vertex()  # Add an origin vertex
 vcolor[origin] = "#ff0000"  # Color the origin vertex red
+vlink[origin] = base_url  # Store the base URL in the origin vertex
 
 next_stage_vertices = []  # List to keep track of vertices at the next stage
-def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
+def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
     if current_depth >= depth:
         return
     
-    links = prune_links(url, extract_links(extract_html(url)))
+    links = prune_links(vlink[origin_vert], extract_links(extract_html(vlink[origin_vert])))
 
     for link in links:
         vertex = g.add_vertex()  # Add a new vertex for the link
@@ -97,13 +98,13 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
     if next_stage_vertices:
         with ThreadPoolExecutor() as executor:
             # Submit the next stage of link extraction for each vertex in parallel
-            futures = [executor.submit(add_links_to_graph, vlink[v], depth, current_depth + 1, v) for v in next_stage_vertices]
+            futures = [executor.submit(add_links_to_graph, current_depth + 1, v) for v in next_stage_vertices]
 # Start the recursive link extraction from the base url
 # The block will make sure that if we hit Ctrl+C, the graph will still be drawn
 # Unless we hit it twice, in which case it will exit immediately
 start_time = time.time()
 try:
-    add_links_to_graph(base_url, depth)
+    add_links_to_graph()
 finally:
     gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
     print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
