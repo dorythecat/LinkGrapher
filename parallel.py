@@ -20,9 +20,20 @@ def extract_html(url : str) -> str:
     """Fetch HTML content from a URL."""
     try:
         return urlopen(url).read().decode("utf-8")
+    except HTTPError as e:
+        if debug_mode:
+            print(f"HTTPError: {e.code} for URL: {url}")
+        if e.code == 429:  # Too Many Requests
+            time.sleep(10) # Wait before retrying
+            return extract_html(url)
+        return ""
+    except URLError as e:
+        if debug_mode:
+            print(f"URLError: {e.reason} for URL: {url}")
+        return ""
     except Exception as e:
         if debug_mode:
-            print(f"Error fetching {url}: {e}")
+            print(f"Error: {e} for URL: {url}")
         return ""
 
 def extract_links(html: str) -> list:
