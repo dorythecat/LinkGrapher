@@ -15,16 +15,8 @@ def extract_html(url : str) -> str:
             print(f"Error fetching {url}: {e}")
         return ""
 
-def extract_direct_links(html: str) -> list:
-    return re.findall('href="([^"]+?)(?=[?"])', html)
-
-def extract_same_page_links(html: str) -> list:
+def extract_links(html: str) -> list:
     return re.findall('href="/([^"]+?)(?=[?"])', html)
-
-html = extract_html(base_url)  # Fetch the HTML content 
-direct_links = extract_direct_links(html)  # Extract direct links 
-same_page_links = extract_same_page_links(html)  # Extract same page links 
-
 
 g = gt.Graph(directed=True)  # Create a directed graph 
 
@@ -39,8 +31,7 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
     if current_depth >= depth:
         return
     
-    html = extract_html(url)  # Fetch the HTML content of the page
-    links = extract_direct_links(html) + extract_same_page_links(html)  # Extract all links
+    links = extract_direct_links(extract_html(url))
 
     for link in links:
         if not link.startswith("http"): # Check if the link is relative

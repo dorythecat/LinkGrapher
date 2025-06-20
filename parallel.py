@@ -9,6 +9,7 @@ depth = 2  # Depth of recursion for link extraction
 debug_mode = True  # Set to True to enable debug mode
 
 def extract_html(url : str) -> str:
+    """Fetch HTML content from a URL."""
     try:
         return urlopen(url).read().decode("utf-8")
     except Exception as e:
@@ -16,10 +17,8 @@ def extract_html(url : str) -> str:
             print(f"Error fetching {url}: {e}")
         return ""
 
-def extract_direct_links(html: str) -> list:
-    return re.findall('href="([^"]+?)(?=[?"])', html)
-
-def extract_same_page_links(html: str) -> list:
+def extract_links(html: str) -> list:
+    """Extract links from HTML content."""
     return re.findall('href="/([^"]+?)(?=[?"])', html)
 
 def prune_links(url: str, links: list) -> list:
@@ -59,11 +58,6 @@ def prune_links(url: str, links: list) -> list:
         pruned_links.append(link)
     return pruned_links
 
-html = extract_html(base_url)  # Fetch the HTML content 
-direct_links = extract_direct_links(html)  # Extract direct links 
-same_page_links = extract_same_page_links(html)  # Extract same page links 
-
-
 g = gt.Graph(directed=True)  # Create a directed graph 
 
 eweight = g.new_ep("float")
@@ -78,10 +72,7 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
     if current_depth >= depth:
         return
     
-    html = extract_html(url)  # Fetch the HTML content of the page
-    links = extract_direct_links(html) + extract_same_page_links(html)
-
-    links = prune_links(url, links)
+    links = prune_links(url, extract_links(extract_html(url)))
 
     for link in links:
         vertex = g.add_vertex()  # Add a new vertex for the link
