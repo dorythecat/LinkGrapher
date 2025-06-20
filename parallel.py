@@ -58,17 +58,17 @@ def prune_links(url: str, links: list) -> list:
         pruned_links.append(link)
     return pruned_links
 
-g = gt.Graph(directed=True)  # Create a directed graph 
+g = gt.Graph(directed=True)
 
 eweight = g.new_ep("float")
 vcolor = g.new_vp("string")
 vlink = g.new_vp("string")
 
-origin = g.add_vertex()  # Add an origin vertex
-vcolor[origin] = "#ff0000"  # Color the origin vertex red
-vlink[origin] = base_url  # Store the base URL in the origin vertex
+origin = g.add_vertex()
+vcolor[origin] = "#ff0000"
+vlink[origin] = base_url
 
-next_stage_vertices = []  # List to keep track of vertices at the next stage
+next_stage_vertices = []
 def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
     if current_depth >= depth:
         return
@@ -76,11 +76,10 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
     links = prune_links(vlink[origin_vert], extract_links(extract_html(vlink[origin_vert])))
 
     for link in links:
-        vertex = g.add_vertex()  # Add a new vertex for the link
-        e = g.add_edge(origin_vert, vertex)  # Create an edge from origin to the new vertex
-        eweight[e] = 10.0 / len(links)  # Set the edge weight based on the number of links
+        vertex = g.add_vertex()
+        e = g.add_edge(origin_vert, vertex)
+        eweight[e] = 10.0 / len(links)
     
-        # The vertex color can be set based on the depth or other criteria
         if current_depth == 0:
             vcolor[vertex] = "#00ff00"
         elif current_depth == 1:
@@ -93,7 +92,7 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
             vcolor[vertex] = "#00ffff"
         else:
             vcolor[vertex] = "#ffffff"
-        vlink[vertex] = link  # Store the link in the vertex property
+        vlink[vertex] = link
         next_stage_vertices.append(vertex)
     if next_stage_vertices:
         with ThreadPoolExecutor() as executor:
