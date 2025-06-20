@@ -22,21 +22,23 @@ def extract_direct_links(html: str) -> list:
 def extract_same_page_links(html: str) -> list:
     return re.findall('href="/([^"]+?)(?=[?"])', html)
 
-def prune_links(links: list) -> list:
+def prune_links(url: str, links: list) -> (list, int):
     """Prune links to remove duplicates and ensure they are absolute."""
     seen = set()
     pruned_links = []
+    back_links = 0
     for link in links:
         link = link.strip()
         if not link.startswith("http"):
             if not link.startswith("/"):
                 link = "/" + link
-            link = base_url + link
-        if base_url in link:
-            continue
+            link = url + link
         if link in seen:
             continue
         seen.add(link)
+        if url in link and link.startswith(url + "/"):
+            back_links += 1
+            continue
         if "mailto:" in link:
             continue # Skip mailto links
         if "googleapis.com" in link or "gstatic.com" in link or "googleusercontent.com" in link or "google.com" in link:
@@ -56,7 +58,7 @@ def prune_links(links: list) -> list:
         if ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link:
             continue # Skip image files
         pruned_links.append(link)
-    return pruned_links
+    return pruned_links, back_links
 
 html = extract_html(base_url)  # Fetch the HTML content 
 direct_links = extract_direct_links(html)  # Extract direct links 
@@ -78,9 +80,13 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
         return
     
     html = extract_html(url)  # Fetch the HTML content of the page
-    links = extract_direct_links(html)# + extract_same_page_links(html)  # Extract all links
+    links = extract_direct_links(html)
 
-    links = prune_links(links)
+    links, back_links = prune_links(url, links)
+    back_links += len(extract_same_page_links(html))
+
+    # Idk what to use the back_links for, since it's ugly to represent
+    # in the graph, but we can print it for debugging if we really want to
 
     for link in links:
         vertex = g.add_vertex()  # Add a new vertex for the link
