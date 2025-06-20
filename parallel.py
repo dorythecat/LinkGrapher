@@ -102,6 +102,8 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
             eweight[e] = 10.0 / len(links)
             continue;
         seen.add(link)
+        if len(link.split("/")) < 3:
+            continue
         vertex = g.add_vertex()
         e = g.add_edge(origin_vert, vertex)
         eweight[e] = 10.0 / len(links)
