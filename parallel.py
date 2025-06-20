@@ -144,5 +144,5 @@ start_time = time.time()
 try:
     add_links_to_graph()
 finally:
-    gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
+    gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
     print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
