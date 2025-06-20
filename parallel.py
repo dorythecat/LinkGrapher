@@ -22,6 +22,42 @@ def extract_direct_links(html: str) -> list:
 def extract_same_page_links(html: str) -> list:
     return re.findall('href="/([^"]+?)(?=[?"])', html)
 
+def prune_links(links: list) -> list:
+    """Prune links to remove duplicates and ensure they are absolute."""
+    seen = set()
+    pruned_links = []
+    for link in links:
+        link = link.strip()
+        if not link.startswith("http"):
+            if not link.startswith("/"):
+                link = "/" + link
+            link = base_url + link
+        if base_url in link:
+            continue
+        if link in seen:
+            continue
+        seen.add(link)
+        if "mailto:" in link:
+            continue # Skip mailto links
+        if "googleapis.com" in link or "gstatic.com" in link or "googleusercontent.com" in link or "google.com" in link:
+            continue # Skip Google API and Gstatic links
+        if "linkedin.com" in link:
+            continue # Skip LinkedIn links
+        if "facebook.com" in link:
+            continue # Skip Facebook links
+        if "twitter.com" in link or "x.com" in link:
+            continue # Skip Twitter links
+        if "instagram.com" in link:
+            continue # Skip Instagram links
+        if "youtube.com" in link or "youtu.be" in link:
+            continue # Skip YouTube links
+        if ".zip" in link or ".tar" in link or ".gz" in link:
+            continue # Skip archive files
+        if ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link:
+            continue # Skip image files
+        pruned_links.append(link)
+    return pruned_links
+
 html = extract_html(base_url)  # Fetch the HTML content 
 direct_links = extract_direct_links(html)  # Extract direct links 
 same_page_links = extract_same_page_links(html)  # Extract same page links 
@@ -42,14 +78,11 @@ def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert
         return
     
     html = extract_html(url)  # Fetch the HTML content of the page
-    links = extract_direct_links(html) + extract_same_page_links(html)  # Extract all links
+    links = extract_direct_links(html)# + extract_same_page_links(html)  # Extract all links
+
+    links = prune_links(links)
 
     for link in links:
-        if not link.startswith("http"): # Check if the link is relative
-            if not link.startswith("/"):
-                link = "/" + link  # Ensure the link starts with a slash
-            link = base_url + link  # Construct full URL if it's a relative link
-        
         vertex = g.add_vertex()  # Add a new vertex for the link
         e = g.add_edge(origin_vert, vertex)  # Create an edge from origin to the new vertex
         eweight[e] = 10.0 / len(links)  # Set the edge weight based on the number of links
