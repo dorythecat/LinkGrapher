@@ -1,0 +1,84 @@
+from urllib.request import urlopen
+import re
+import graph_tool.all as gt
+from concurrent.futures import ThreadPoolExecutor
+import time
+
+base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrape
+depth = 3  # Depth of recursion for link extraction
+debug_mode = True  # Set to True to enable debug mode
+
+def extract_html(url : str) -> str:
+    try:
+        return urlopen(url).read().decode("utf-8")
+    except Exception as e:
+        if debug_mode:
+            print(f"Error fetching {url}: {e}")
+        return ""
+
+def extract_direct_links(html: str) -> list:
+    return re.findall('href="([^"]+?)(?=[?"])', html)
+
+def extract_same_page_links(html: str) -> list:
+    return re.findall('href="/([^"]+?)(?=[?"])', html)
+
+html = extract_html(base_url)  # Fetch the HTML content 
+direct_links = extract_direct_links(html)  # Extract direct links 
+same_page_links = extract_same_page_links(html)  # Extract same page links 
+
+
+g = gt.Graph(directed=True)  # Create a directed graph 
+
+eweight = g.new_ep("float")
+vcolor = g.new_vp("string")
+vlink = g.new_vp("string")
+
+origin = g.add_vertex()  # Add an origin vertex
+vcolor[origin] = "#ff0000"  # Color the origin vertex red
+
+next_stage_vertices = []  # List to keep track of vertices at the next stage
+def add_links_to_graph(url: str, depth: int, current_depth: int = 0, origin_vert: gt.Vertex = origin) -> None:
+    if current_depth >= depth:
+        return
+    
+    html = extract_html(url)  # Fetch the HTML content of the page
+    links = extract_direct_links(html) + extract_same_page_links(html)  # Extract all links
+
+    for link in links:
+        if not link.startswith("http"): # Check if the link is relative
+            if not link.startswith("/"):
+                link = "/" + link  # Ensure the link starts with a slash
+            link = base_url + link  # Construct full URL if it's a relative link
+        
+        vertex = g.add_vertex()  # Add a new vertex for the link
+        e = g.add_edge(origin_vert, vertex)  # Create an edge from origin to the new vertex
+        eweight[e] = 10.0 / len(links)  # Set the edge weight based on the number of links
+    
+        # The vertex color can be set based on the depth or other criteria
+        if current_depth == 0:
+            vcolor[vertex] = "#00ff00"
+        elif current_depth == 1:
+            vcolor[vertex] = "#0000ff"
+        elif current_depth == 2:
+            vcolor[vertex] = "#ffff00"
+        elif current_depth == 3:
+            vcolor[vertex] = "#ff00ff"
+        elif current_depth == 4:
+            vcolor[vertex] = "#00ffff"
+        else:
+            vcolor[vertex] = "#ffffff"
+        vlink[vertex] = link  # Store the link in the vertex property
+        next_stage_vertices.append(vertex)
+    if next_stage_vertices:
+        with ThreadPoolExecutor() as executor:
+            # Submit the next stage of link extraction for each vertex in parallel
+            futures = [executor.submit(add_links_to_graph, vlink[v], depth, current_depth + 1, v) for v in next_stage_vertices]
+# Start the recursive link extraction from the base url
+# The block will make sure that if we hit Ctrl+C, the graph will still be drawn
+# Unless we hit it twice, in which case it will exit immediately
+start_time = time.time()
+try:
+    add_links_to_graph(base_url, depth)
+finally:
+    gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.svg")
+    print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
