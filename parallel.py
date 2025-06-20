@@ -8,6 +8,14 @@ base_url = "https://webscraper.io/test-sites/e-commerce/allinone" # URL to scrap
 depth = 2  # Depth of recursion for link extraction
 debug_mode = True  # Set to True to enable debug mode
 
+forbidden_content = [ # List of content to skip
+    ".css", ".js", ".php", ".json", ".xml", "mailto:", "googleapis.com",
+    "gstatic.com", "googleusercontent.com", "google.com", "linkedin.com",
+    "facebook.com", "twitter.com", "x.com", "instagram.com", "youtube.com",
+    "youtu.be", ".zip", ".tar", ".gz", ".ico", ".png", ".jpg", ".jpeg",
+    ".gif", ".bmp", ".svg", ".webp"
+]
+
 def extract_html(url : str) -> str:
     """Fetch HTML content from a URL."""
     try:
@@ -20,6 +28,13 @@ def extract_html(url : str) -> str:
 def extract_links(html: str) -> list:
     """Extract links from HTML content."""
     return re.findall('href="/([^"]+?)(?=[?"])', html)
+
+def is_forbidden(link: str) -> bool:
+    """Check if a link is forbidden based on the content."""
+    for content in forbidden_content:
+        if content in link:
+            return True
+    return False
 
 def prune_links(url: str, links: list) -> list:
     """Prune links to remove duplicates and ensure they are absolute."""
@@ -35,26 +50,8 @@ def prune_links(url: str, links: list) -> list:
         if link in seen:
             continue
         seen.add(link)
-        if ".css" in link or ".js" in link or ".php" in link or ".json" in link or ".xml" in link:
-            continue # Skip static files
-        if "mailto:" in link:
-            continue # Skip mailto links
-        if "googleapis.com" in link or "gstatic.com" in link or "googleusercontent.com" in link or "google.com" in link:
-            continue # Skip Google API and Gstatic links
-        if "linkedin.com" in link:
-            continue # Skip LinkedIn links
-        if "facebook.com" in link:
-            continue # Skip Facebook links
-        if "twitter.com" in link or "x.com" in link:
-            continue # Skip Twitter links
-        if "instagram.com" in link:
-            continue # Skip Instagram links
-        if "youtube.com" in link or "youtu.be" in link:
-            continue # Skip YouTube links
-        if ".zip" in link or ".tar" in link or ".gz" in link:
-            continue # Skip archive files
-        if ".ico" in link or ".png" in link or ".jpg" in link or ".jpeg" in link or ".gif" in link or ".bmp" in link or ".svg" in link or ".webp" in link:
-            continue # Skip image files
+        if is_forbidden(link):
+            continue
         pruned_links.append(link)
     return pruned_links
 
