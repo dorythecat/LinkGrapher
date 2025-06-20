@@ -114,6 +114,10 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
     with ThreadPoolExecutor() as executor:
         # Submit the next stage of link extraction for each vertex in parallel
         futures = [executor.submit(add_links_to_graph, current_depth + 1, v) for v in next_stage_vertices]
+        # Wait for all futures to complete
+        for future in futures:
+            future.result()
+    next_stage_vertices.clear()
 # Start the recursive link extraction from the base url
 # The block will make sure that if we hit Ctrl+C, the graph will still be drawn
 # Unless we hit it twice, in which case it will exit immediately
