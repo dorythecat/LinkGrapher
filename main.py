@@ -140,9 +140,10 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
 # Start the recursive link extraction from the base url
 # The block will make sure that if we hit Ctrl+C, the graph will still be drawn
 # Unless we hit it twice, in which case it will exit immediately
-start_time = time.time()
-try:
-    add_links_to_graph()
-finally:
-    gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
-    print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
+if __name__ == "__main__":
+    start_time = time.time()
+    try:
+        add_links_to_graph()
+    finally:
+        gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
+        print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
