@@ -6,6 +6,10 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 import sys
 
+# Variables that CAN NOT be modified by the user
+MAX_DEPTH = 5  # Maximum depth of recursion
+
+# Variables that CAN be modified by the user
 base_url = "https://github.com/dorythecat" # URL to scrape
 depth = 3  # Depth of recursion for link extraction
 debug_mode = True  # Set to True to enable debug mode
@@ -17,6 +21,27 @@ forbidden_content = [ # List of content to skip
     "youtu.be", ".zip", ".tar", ".gz", ".ico", ".png", ".jpg", ".jpeg",
     ".gif", ".bmp", ".svg", ".webp"
 ]
+
+if len(sys.argv) > 1:
+    base_url = sys.argv[1]  # Override base URL from command line argument
+    if not base_url.startswith("http") or len(base_url.split("/")) < 3:
+        print("Invalid URL! Please provide a valid URL!")
+        exit(1)
+if len(sys.argv) > 2:
+    try:
+        depth = int(sys.argv[2])  # Override depth from command line argument
+    except ValueError:
+        print("Invalid depth value!")
+        exit(1)
+    if depth <= 0:
+        print(f"Depth cannot be negative or zero!")
+        exit(1)
+
+# Ensure depth is not too large to avoid excessive recursion
+if depth > MAX_DEPTH:
+    print(f"Depth exceeds maximum allowed!")
+    print(f"Using maximum depth of {MAX_DEPTH}.")
+    depth = MAX_DEPTH
 
 def extract_html(url : str) -> str:
     """Fetch HTML content from a URL."""
