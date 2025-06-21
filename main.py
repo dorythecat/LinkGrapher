@@ -19,7 +19,12 @@ forbidden_content = [ # List of content to skip
     "gstatic.com", "googleusercontent.com", "google.com", "linkedin.com",
     "facebook.com", "twitter.com", "x.com", "instagram.com", "youtube.com",
     "youtu.be", ".zip", ".tar", ".gz", ".ico", ".png", ".jpg", ".jpeg",
-    ".gif", ".bmp", ".svg", ".webp"
+    ".gif", ".bmp", ".svg", ".webp", ".pdf", ".doc", ".docx", ".xls",
+    ".xlsx", ".ppt", ".pptx", ".txt", ".md", ".csv", ".exe", ".apk",
+    ".mp3", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv", ".webm",
+    ".ogg", ".ogv", ".wav", ".flac", ".aac", ".m4a", ".zip", ".rar",
+    ".7z", ".tar", ".iso", ".dmg", ".pkg", ".deb", ".rpm", ".msi",
+    ".apk", ".bat", ".sh", ".ps1", ".exe", ".dll", ".so", ".dylib"
 ]
 
 if len(sys.argv) > 1:
