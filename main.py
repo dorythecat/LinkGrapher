@@ -12,7 +12,7 @@ MAX_DEPTH = 5  # Maximum depth of recursion
 # Variables that CAN be modified by the user
 base_url = "https://github.com/dorythecat" # URL to scrape
 depth = 3  # Depth of recursion for link extraction
-debug_mode = True  # Set to True to enable debug mode
+debug_mode = False  # Set to True to enable debug mode
 
 forbidden_content = [ # List of content to skip
     ".css", ".js", ".php", ".json", ".xml", "mailto:", "googleapis.com",
