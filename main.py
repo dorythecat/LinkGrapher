@@ -41,6 +41,8 @@ if len(sys.argv) > 2:
     if depth <= 0:
         print(f"Depth cannot be negative or zero!")
         exit(1)
+if len(sys.argv) > 3:
+    debug_mode = sys.argv[3].lower() == "true"  # Override debug mode from command line argument
 
 # Ensure depth is not too large to avoid excessive recursion
 if depth > MAX_DEPTH:
