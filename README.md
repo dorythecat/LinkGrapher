@@ -8,8 +8,7 @@ o use link grapher, you'll need to have the latest version of pyhon installed in
 
 To use the program, simply run the following command in your terminal:
 
-```pyhon main.py <url> <depth> <debug_mode>
-```
+```pyhon main.py <url> <depth> <debug_mode>```
 
 Where `<url>` is the url of the webpage you want to analyze, `<depth>` is the depth of the links you want to follow, and <debug_mode> is "true" when you want to run the program in Debug Mode. For example, if you want to follow links up to a depth of 2 from "https://example.com", without debug mode enabled, you would run:
 
