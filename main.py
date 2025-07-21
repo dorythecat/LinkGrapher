@@ -146,18 +146,19 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
         e = g.add_edge(origin_vert, vertex)
         eweight[e] = 10.0 / len(links)
     
-        if current_depth == 0:
-            vcolor[vertex] = "#00ff00"
-        elif current_depth == 1:
-            vcolor[vertex] = "#0000ff"
-        elif current_depth == 2:
-            vcolor[vertex] = "#ffff00"
-        elif current_depth == 3:
-            vcolor[vertex] = "#ff00ff"
-        elif current_depth == 4:
-            vcolor[vertex] = "#00ffff"
-        else:
-            vcolor[vertex] = "#ffffff"
+        match current_depth:
+            case 0:
+                vcolor[vertex] = "#00ff00"
+            case 1:
+                vcolor[vertex] = "#0000ff"
+            case 2:
+                vcolor[vertex] = "#ffff00"
+            case 3:
+                vcolor[vertex] = "#ff00ff"
+            case 4:
+                vcolor[vertex] = "#00ffff"
+            case _:
+                vcolor[vertex] = "#ffffff"
         vlink[vertex] = link
         next_stage_vertices.append(vertex)
     if not next_stage_vertices:
