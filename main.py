@@ -58,7 +58,7 @@ def extract_html(url : str) -> str:
         if debug_mode:
             print(f"HTTPError: {e.code} for URL: {url}")
         if e.code == 429:  # Too Many Requests
-            time.sleep(60) # Wait before retrying
+            time.sleep(60) # Wait a minute before retrying
             return extract_html(url)
         return ""
     except URLError as e:
