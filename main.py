@@ -70,49 +70,29 @@ def extract_html(url : str) -> str:
             print(f"Error: {e} for URL: {url}")
         return ""
 
-def extract_links(html: str) -> list:
-    """Extract links from HTML content."""
-    return re.findall('href="([^"]+?)(?=[?:"])', html)
-
 def extract_links_from_url(url: str) -> list:
     """Extract links from a given URL."""
     html = extract_html(url)
     if not html:
         return []
-    return extract_links(html)
-
-def is_forbidden(link: str) -> bool:
-    """Check if a link is forbidden based on the content."""
-    for content in forbidden_content:
-        if content in link:
-            return True
-    return False
+    return re.findall('href="([^"]+?)(?=[?:"])', html) # Extract href links from HTML content
 
 def prune_links(url: str, links: list) -> list:
     """Prune links to remove duplicates and ensure they are absolute."""
     seen = set()
     pruned_links = []
-    domain = url.split("/")[0] + "//" + url.split("/")[2]
+    domain = "/".join(url.split("/")[:3]) # OMG HIDDEN :3
     for link in links:
         if not link or link.startswith("#"):
             continue
         if not link.startswith("http"):
-            if link.startswith("//"):
-                link = "http:" + link
-            else:
-                if not link.startswith("/"):
-                    link = "/" + link
-                link = domain + link
+            link = ("http:" + link) if link.startswith("//") else (domain + ("" if link.startswith("/") else "/") + link)
         if link in seen:
             continue
         seen.add(link)
-        if not is_forbidden(link):
+        if not any(forbidden in link for forbidden in forbidden_content): # Skip forbidden links
             pruned_links.append(link)
     return pruned_links
-
-def prune_url_links(url: str) -> list:
-    """Prune links from a URL."""
-    return prune_links(url, extract_links_from_url(url))
 
 g = gt.Graph(directed=True)
 
@@ -130,7 +110,7 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
     if current_depth >= depth:
         return
     
-    links = prune_url_links(vlink[origin_vert])
+    links = prune_links(vlink[origin_vert], extract_links_from_url(vlink[origin_vert]))
     for link in links:
         if link in seen:
             vertex = g.vertex(vlink.a == link)
@@ -170,6 +150,7 @@ def add_links_to_graph(current_depth: int = 0, origin_vert: gt.Vertex = origin) 
         for future in futures:
             future.result()
     next_stage_vertices.clear()
+
 # Start the recursive link extraction from the base url
 # The block will make sure that if we hit Ctrl+C, the graph will still be drawn
 # Unless we hit it twice, in which case it will exit immediately
