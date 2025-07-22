@@ -12,7 +12,8 @@ MAX_DEPTH = 5  # Maximum depth of recursion
 # Variables that CAN be modified by the user
 base_url = "https://github.com/dorythecat" # URL to scrape
 depth = 3  # Depth of recursion for link extraction
-debug_mode = False  # Set to True to enable debug mode
+output_file = "output.png"  # Output file name for the graph image
+debug_mode = False  # Enable debug mode for verbose output
 
 forbidden_content = [ # List of content to skip
     ".css", ".js", ".php", ".json", ".xml", "mailto:", "googleapis.com",
@@ -32,6 +33,7 @@ if len(sys.argv) > 1:
     if not base_url.startswith("http") or len(base_url.split("/")) < 3:
         print("Invalid URL! Please provide a valid URL!")
         exit(1)
+
 if len(sys.argv) > 2:
     try:
         depth = int(sys.argv[2])  # Override depth from command line argument
@@ -41,8 +43,12 @@ if len(sys.argv) > 2:
     if depth <= 0:
         print(f"Depth cannot be negative or zero!")
         exit(1)
+
 if len(sys.argv) > 3:
-    debug_mode = sys.argv[3].lower() == "true"  # Override debug mode from command line argument
+    output_file = sys.argv[3]  # Override output file name from command line argument
+
+if len(sys.argv) > 4:
+    debug_mode = sys.argv[4].lower() == "true"  # Override debug mode from command line argument
 
 # Ensure depth is not too large to avoid excessive recursion
 if depth > MAX_DEPTH:
@@ -159,6 +165,6 @@ if __name__ == "__main__":
     try:
         add_links_to_graph()
     finally:
-        gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
-        print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
+        gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output=output_file, output_size=(1920, 1080))
+        print(f"Graph drawn in {time.time() - start_time:.2f} seconds. (Saved as {output_file})")
         print(f"Total vertices: {g.num_vertices()}, Total edges: {g.num_edges()}")
