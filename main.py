@@ -161,3 +161,4 @@ if __name__ == "__main__":
     finally:
         gt.graph_draw(g, vertex_fill_color=vcolor, edge_pen_width=eweight, output="output.png")
         print(f"Graph drawn in {time.time() - start_time:.2f} seconds.")
+        print(f"Total vertices: {g.num_vertices()}, Total edges: {g.num_edges()}")
