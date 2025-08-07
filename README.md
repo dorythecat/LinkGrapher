@@ -4,7 +4,9 @@ Link Grapher is a python application that allows to input a webpage, and see al 
 # Usage
 To use link grapher, you'll need to have the latest version of pyhon installed in your machine, as well as the graph-tool library.
 
-To use the program, simply run the following command in your terminal:
+To use the app, you will need to install graph-tool. For this, I recommend you
+[install it natively](https://graph-tool.skewed.de/installation.html#native-installation)
+to your platform. Then, you can simpy use the following command on your terminal:
 
 ```python main.py <url> <depth> <output_file> <debug_mode>```
 

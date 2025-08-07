@@ -1,0 +1,161 @@
+@define-color STRAWBERRY_100 #ff8c82;
+@define-color STRAWBERRY_300 #ed5353;
+@define-color STRAWBERRY_500 #c6262e;
+@define-color STRAWBERRY_700 #a10705;
+@define-color STRAWBERRY_900 #7a0000;
+@define-color ORANGE_100 #ffc27d;
+@define-color ORANGE_300 #ffa154;
+@define-color ORANGE_500 #f37329;
+@define-color ORANGE_700 #cc3b02;
+@define-color ORANGE_900 #a62100;
+@define-color BANANA_100 #fff394;
+@define-color BANANA_300 #ffe16b;
+@define-color BANANA_500 #f9c440;
+@define-color BANANA_700 #d48e15;
+@define-color BANANA_900 #ad5f00;
+@define-color LIME_100 #d1ff82;
+@define-color LIME_300 #9bdb4d;
+@define-color LIME_500 #68b723;
+@define-color LIME_700 #3a9104;
+@define-color LIME_900 #206b00;
+@define-color MINT_100 #89ffdd;
+@define-color MINT_300 #43d6b5;
+@define-color MINT_500 #28bca3;
+@define-color MINT_700 #0e9a83;
+@define-color MINT_900 #007367;
+@define-color BLUEBERRY_100 #8cd5ff;
+@define-color BLUEBERRY_300 #64baff;
+@define-color BLUEBERRY_500 #3689e6;
+@define-color BLUEBERRY_700 #0d52bf;
+@define-color BLUEBERRY_900 #002e99;
+@define-color BUBBLEGUM_100 #fe9ab8;
+@define-color BUBBLEGUM_300 #f4679d;
+@define-color BUBBLEGUM_500 #de3e80;
+@define-color BUBBLEGUM_700 #bc245d;
+@define-color BUBBLEGUM_900 #910e38;
+@define-color GRAPE_100 #e4c6fa;
+@define-color GRAPE_300 #cd9ef7;
+@define-color GRAPE_500 #a56de2;
+@define-color GRAPE_700 #7239b3;
+@define-color GRAPE_900 #452981;
+@define-color COCOA_100 #a3907c;
+@define-color COCOA_300 #8a715e;
+@define-color COCOA_500 #715344;
+@define-color COCOA_700 #57392d;
+@define-color COCOA_900 #3d211b;
+@define-color SILVER_100 #fafafa;
+@define-color SILVER_300 #d4d4d4;
+@define-color SILVER_500 #abacae;
+@define-color SILVER_700 #7e8087;
+@define-color SILVER_900 #555761;
+@define-color SLATE_100 #95a3ab;
+@define-color SLATE_300 #667885;
+@define-color SLATE_500 #485a6c;
+@define-color SLATE_700 #273445;
+@define-color SLATE_900 #0e141f;
+@define-color BLACK_100 #666;
+@define-color BLACK_300 #4d4d4d;
+@define-color BLACK_500 #333;
+@define-color BLACK_700 #1a1a1a;
+@define-color BLACK_900 #000;
+.title-1 { font-size: 24pt; font-weight: 700; letter-spacing: -0.04em; }
+
+.title-2 { font-weight: 300; font-size: 18pt; letter-spacing: -0.05em; }
+
+.title-3 { font-size: 11pt; }
+
+.title-4 { font-weight: 700; opacity: 0.8; padding-bottom: 0.5em; padding-top: 0.5em; }
+
+.dim-label, placeholder box button label:not(.title-3), placeholder .title-2 { opacity: 0.75; }
+
+.small-label { font-size: 0.85em; }
+
+.error { color: #ed5353; }
+
+.success { color: #9bdb4d; }
+
+.warning { color: #fff394; }
+
+.accent:backdrop, .error:backdrop, .success:backdrop, .warning:backdrop { color: inherit; }
+
+.osd { background-color: rgba(255, 255, 255, 0.95); border-radius: 0.375000001rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.42), 0 1px 2px rgba(0, 0, 0, 0.44); color: #3a3a3a; margin: 0.500000001rem; padding: 0.500000001rem; }
+
+paper, .card { background-color: #3a3a3a; box-shadow: inset 0 -1px 0 0 rgba(255, 255, 255, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.06), inset 1px 0 0 0 rgba(255, 255, 255, 0.014), inset -1px 0 0 0 rgba(255, 255, 255, 0.014), 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.42), 0 1px 2px rgba(0, 0, 0, 0.44); }
+
+paper.rounded, .card.rounded { border-radius: 0.375000001rem; }
+
+window.csd.dialog { box-shadow: inset 0 -1px 0 0 rgba(255, 255, 255, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.06), inset 1px 0 0 0 rgba(255, 255, 255, 0.014), inset -1px 0 0 0 rgba(255, 255, 255, 0.014), 0 0 0 1px rgba(0, 0, 0, 0.75), 0 3px 8px 2px rgba(0, 0, 0, 0.2), 0 5px 5px -3px rgba(0, 0, 0, 0.5), 0 8px 5px 1px rgba(0, 0, 0, 0.2); }
+
+window.csd.dialog:backdrop { box-shadow: inset 0 -1px 0 0 rgba(255, 255, 255, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.06), inset 1px 0 0 0 rgba(255, 255, 255, 0.014), inset -1px 0 0 0 rgba(255, 255, 255, 0.014), 0 0 0 1px rgba(0, 0, 0, 0.75), 0 3px 4px rgba(0, 0, 0, 0.25), 0 3px 3px -3px rgba(0, 0, 0, 0.45); }
+
+window.csd.dialog .dialog-content-area { margin: 1.000000001rem; margin-top: 1.500000001rem; }
+
+window.csd.dialog .dialog-action-area { margin: 1.000000001rem; margin-top: 1.3333333343rem; }
+
+window.csd.dialog .dialog-action-area button.text-button { min-width: 5.000000001rem; }
+
+window.csd.dialog .dialog-action-area button:dir(ltr) + button { margin-left: 0.500000001rem; }
+
+window.csd.dialog .dialog-action-area button:dir(rtl) + button { margin-right: 0.500000001rem; }
+
+header:not(:first-child) { margin-top: 1em; }
+
+header .heading { font-weight: 700; opacity: 0.9; padding: 0; }
+
+header .dim-label, header placeholder box button label:not(.title-3), placeholder box button header label:not(.title-3), header placeholder .title-2, placeholder header .title-2 { font-size: 0.9em; margin-top: 0.1em; opacity: 0.8; }
+
+window.csd.dialog.message .dialog-vbox .title { font-weight: 500; font-size: 1.22em; }
+
+window.csd.dialog.message .dialog-content-area box + expander-widget { margin-bottom: 0.500000001rem; }
+
+overlaybar .osd { padding: 0.500000001rem 1.000000001rem; text-shadow: 0 0.0833333343rem 0.1666666677rem rgba(255, 255, 255, 0.6); }
+
+overlaybar .osd spinner { -gtk-icon-shadow: 0 0.0833333343rem 0.1666666677rem rgba(255, 255, 255, 0.6); }
+
+overlaybar .osd revealer:dir(ltr) > spinner { margin-left: 0.500000001rem; }
+
+overlaybar .osd revealer:dir(rtl) > spinner { margin-right: 0.500000001rem; }
+
+placeholder { margin: 1.000000001rem; }
+
+placeholder > grid > .large-icons { -gtk-icon-size: 48px; }
+
+placeholder > grid > .large-icons:dir(ltr) { margin-right: 0.250000001rem; }
+
+placeholder > grid > .large-icons:dir(rtl) { margin-left: 0.250000001rem; }
+
+placeholder .title-1:dir(ltr), placeholder .title-2:dir(ltr) { margin-left: 0.750000001rem; }
+
+placeholder .title-1:dir(rtl), placeholder .title-2:dir(rtl) { margin-right: 0.750000001rem; }
+
+placeholder .title-1 + .title-2 { margin-top: 0.250000001rem; }
+
+placeholder .title-2 { color: white; font-size: 1.3em; font-weight: initial; }
+
+placeholder box { margin-top: 1.000000001rem; }
+
+placeholder box button .large-icons { -gtk-icon-size: 32px; }
+
+placeholder box button .large-icons:dir(ltr) { margin-right: 0.500000001rem; }
+
+placeholder box button .large-icons:dir(rtl) { margin-left: 0.500000001rem; }
+
+placeholder box button label.title-3 { font-weight: initial; }
+
+placeholder box button + button { margin-top: 1.000000001rem; }
+
+list placeholder .title-1 { font-size: 2em; }
+
+list placeholder .title-2 { font-size: 1em; }
+
+popover placeholder > grid > .large-icons { -gtk-icon-size: 32px; }
+
+popover placeholder > grid > .large-icons:dir(ltr) { margin-right: 0; }
+
+popover placeholder > grid > .large-icons:dir(rtl) { margin-left: 0; }
+
+popover placeholder .title-1 { font-size: 1em; font-weight: initial; }
+
+popover placeholder .title-2 { font-size: 0.85em; }
+
+toast .osd > label { margin: 0 1.000000001rem; text-shadow: 0 1px 2px alpha(@theme_fg_color, 0.6); }
