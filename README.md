@@ -1,8 +1,6 @@
 # Link Grapher
 Link Grapher is a python application that allows to input a webpage, and see al he places it links to, and where those paces link to, with a visual represenation of these links in the form of a graph.
 
-This program was made for the Summer of Making 2025, organized by Hack Club.
-
 # Usage
 To use link grapher, you'll need to have the latest version of pyhon installed in your machine, as well as the graph-tool library.
 
